@@ -1,5 +1,5 @@
 
-# TODO:add other services (Hulu, HBO, Prime, D+) (sign in, and look for other video elements)
+# TODO: add other services (Hulu, HBO, Prime, D+) (sign in, and look for other video elements)
 # TODO: figure out what's up with the pause triple-click? (first manipulation after click with real mouse)
 # TODO: have it look for my face specifically, and lower the threshold?
 # TODO: doesn't work in the dark (obvi- look for a better camera or flood the room with IR light)
@@ -9,12 +9,13 @@ import cv2
 import logging as log
 import datetime as dt
 from selenium import webdriver
+from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.common import exceptions
 
 SERVICES = ['https://www.netflix.com/SwitchProfile?tkn=GOCGTGD3QRF4LJNVYBKFVNOIEA',
-            'https://play.hbomax.com/page/urn:hbo:page:home',   # HBO: navigate to a specific profile
+            'https://play.hbomax.com/page/urn:hbo:page:home',
             'https://www.amazon.com/Amazon-Video/b/?ie=UTF8&node=2858778011&ref_=nav_cs_prime_video']
 
 VIDEO_ELEMENTS = ['watch-video', 'HBO', 'Prime']
@@ -51,7 +52,7 @@ while True:
     )
     # if the last person just left the webcam's view, or the first person just entered it
     if len(faces) ^ present:
-        sleep(.5)
+        sleep(0.5)
         ret, frame = video_capture.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
@@ -66,17 +67,19 @@ while True:
         if len(faces) ^ present:
             # pause/resume the video
             try:
-                driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
+                action = ActionBuilder(driver)
+                action.pointer_action.move_to_location(8, 0)
+                action.perform()
+                # driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
                 sleep(0.5)
                 driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
                 present = not present
-                # netflix takes 2 seconds to reduce the play bar: .5 + 1.25 + .25 = 2
                 sleep(1.25)
             # make sure the program doesn't crash if we're not currently watching Netflix
             except exceptions.NoSuchElementException:
                 pass
     # checks for faces four times a second instead of continuously, to conserve resources
-    sleep(.25)
+    sleep(0.25)
 
     # log.info("faces: " + str(len(faces)) + " at " + str(dt.datetime.now()))
 
