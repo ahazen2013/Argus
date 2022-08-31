@@ -48,7 +48,7 @@ while True:
     )
     # if the last person just left the webcam's view, or the first person just entered it
     if len(faces) ^ present:
-        sleep(1)
+        sleep(.5)
         ret, frame = video_capture.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
@@ -67,10 +67,13 @@ while True:
                 sleep(0.5)
                 driver.find_element(By.CLASS_NAME, 'watch-video').click()
                 present = not present
-                sleep(1)
+                # netflix takes 2 seconds to reduce the play bar: .5 + 1.25 + .25 = 2
+                sleep(1.25)
             # make sure the program doesn't crash if we're not currently watching Netflix
             except exceptions.NoSuchElementException:
                 pass
+    # checks for faces four times a second instead of continuously, to conserve resources
+    sleep(.25)
 
     # log.info("faces: " + str(len(faces)) + " at " + str(dt.datetime.now()))
 
