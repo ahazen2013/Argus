@@ -12,12 +12,14 @@ import datetime as dt
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
+from selenium.common import exceptions
 
-SERVICES = ['https://www.netflix.com/SwitchProfile?tkn=GOCGTGD3QRF4LJNVYBKFVNOIEA', '']
+SERVICES = ['https://www.netflix.com/SwitchProfile?tkn=GOCGTGD3QRF4LJNVYBKFVNOIEA',
+            'https://play.hbomax.com/page/urn:hbo:page:home']   # HBO: login info not stored, video element not there
 
 cascPath = "haarcascade_frontalface_default.xml"
 faceCascade = cv2.CascadeClassifier(cascPath)
-log.basicConfig(filename='webcam.log', level=log.INFO)
+# log.basicConfig(filename='webcam.log', level=log.INFO)
 
 video_capture = cv2.VideoCapture(0)
 present = True
@@ -42,23 +44,20 @@ while True:
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
-    if len(faces):  # resume
-        if not present:
+    if len(faces) ^ (not present):  # resume
+        try:
             driver.find_element(By.CLASS_NAME, 'watch-video').click()
-            sleep(0.5)
+        except exceptions.NoSuchElementException:
+            pass
+        sleep(0.5)
+        try:
             driver.find_element(By.CLASS_NAME, 'watch-video').click()
-            present = True
-            sleep(2)
+        except exceptions.NoSuchElementException:
+            pass
+        present = not present
+        sleep(2)
 
-    else:           # pause
-        if present:
-            driver.find_element(By.CLASS_NAME, 'watch-video').click()
-            sleep(0.5)
-            driver.find_element(By.CLASS_NAME, 'watch-video').click()
-            present = False
-            sleep(2)
-
-    log.info("faces: " + str(len(faces)) + " at " + str(dt.datetime.now()))
+    # log.info("faces: " + str(len(faces)) + " at " + str(dt.datetime.now()))
 
 
 # When everything is done, release the capture
