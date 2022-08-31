@@ -3,7 +3,6 @@
 # add other services (Hulu, HBO, Prime, D+)
 # figure out what's up with the pause triple-click? (first manipulation after click with real mouse)
 # have it look for my face specifically, and lower the threshold?
-# add drivers to main file?
 # doesn't work in the dark (obvi- look for a better camera or flood the room with IR light)
 # remove LEDs from the camera? (should get a backup camera if we're doing this)
 
