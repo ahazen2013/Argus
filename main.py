@@ -1,10 +1,9 @@
 
-#TODO:
-# add other services (Hulu, HBO, Prime, D+)
-# figure out what's up with the pause triple-click? (first manipulation after click with real mouse)
-# have it look for my face specifically, and lower the threshold?
-# doesn't work in the dark (obvi- look for a better camera or flood the room with IR light)
-# remove LEDs from the camera? (should get a backup camera if we're doing this)
+# TODO:add other services (Hulu, HBO, Prime, D+) (sign in, and look for other video elements)
+# TODO: figure out what's up with the pause triple-click? (first manipulation after click with real mouse)
+# TODO: have it look for my face specifically, and lower the threshold?
+# TODO: doesn't work in the dark (obvi- look for a better camera or flood the room with IR light)
+# TODO: remove LEDs from the camera? (should get a backup camera if we're doing this)
 
 import cv2
 import logging as log
@@ -15,7 +14,11 @@ from time import sleep
 from selenium.common import exceptions
 
 SERVICES = ['https://www.netflix.com/SwitchProfile?tkn=GOCGTGD3QRF4LJNVYBKFVNOIEA',
-            'https://play.hbomax.com/page/urn:hbo:page:home']   # HBO: login info not stored, video element not there
+            'https://play.hbomax.com/page/urn:hbo:page:home',   # HBO: navigate to a specific profile
+            'https://www.amazon.com/Amazon-Video/b/?ie=UTF8&node=2858778011&ref_=nav_cs_prime_video']
+
+VIDEO_ELEMENTS = ['watch-video', 'HBO', 'Prime']
+index = 0
 
 # gives facial recognition a pattern to look for
 cascPath = "haarcascade_frontalface_default.xml"
@@ -33,7 +36,7 @@ options.add_argument("start-maximized")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
 driver = webdriver.Chrome(options=options)
-driver.get(SERVICES[0])
+driver.get(SERVICES[index])
 
 while True:
     # Capture frame-by-frame
@@ -63,9 +66,9 @@ while True:
         if len(faces) ^ present:
             # pause/resume the video
             try:
-                driver.find_element(By.CLASS_NAME, 'watch-video').click()
+                driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
                 sleep(0.5)
-                driver.find_element(By.CLASS_NAME, 'watch-video').click()
+                driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
                 present = not present
                 # netflix takes 2 seconds to reduce the play bar: .5 + 1.25 + .25 = 2
                 sleep(1.25)
@@ -77,13 +80,6 @@ while True:
 
     # log.info("faces: " + str(len(faces)) + " at " + str(dt.datetime.now()))
 
-# label=driver.find_element(By.XPATH,'/div/div[2]/div/div/div[3]/div/div[1]/div[1]/button').get_attribute('aria-label')
-# driver.find_element(By.CLASS_NAME, 'playback-notification playback-notification--play').click()
-# class: active ltr-omkt8s/inactive ltr-omkt8s
-# When everything is done, release the capture
-# class: active ltr-omkt8s/inactive ltr-omkt8s
 # When everything is done, release the capture
 video_capture.release()
 cv2.destroyAllWindows()
-
-
