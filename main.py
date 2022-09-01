@@ -17,7 +17,7 @@ SERVICES = ['https://www.netflix.com/SwitchProfile?tkn=GOCGTGD3QRF4LJNVYBKFVNOIE
             'https://play.hbomax.com/page/urn:hbo:page:home',
             'https://www.amazon.com/Amazon-Video/b/?ie=UTF8&node=2858778011&ref_=nav_cs_prime_video']
 
-VIDEO_ELEMENTS = ['watch-video', 'HBO', 'Prime']
+VIDEO_ELEMENTS = ['watch-video', 'HBO', 'f45h']
 index = 0
 
 # gives facial recognition a pattern to look for
@@ -69,10 +69,12 @@ while True:
                 action = ActionBuilder(driver)
                 action.pointer_action.move_to_location(8, 0)
                 action.perform()
-                # driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
-                driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
+                if index == 2:
+                    buttons = driver.find_elements(By.CLASS_NAME, VIDEO_ELEMENTS[index])
+                    buttons[2].click()
+                else:
+                    driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
                 present = not present
-                sleep(1.75)
             # make sure the program doesn't crash if we're not currently watching Netflix
             except exceptions.NoSuchElementException:
                 pass
