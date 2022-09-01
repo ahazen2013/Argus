@@ -1,6 +1,5 @@
 
 # TODO: add other services (Hulu, HBO, Prime, D+) (sign in, and look for other video elements)
-# TODO: figure out what's up with the pause triple-click? (first manipulation after click with real mouse)
 # TODO: have it look for my face specifically, and lower the threshold?
 # TODO: doesn't work in the dark (obvi- look for a better camera or flood the room with IR light)
 # TODO: remove LEDs from the camera? (should get a backup camera if we're doing this)
@@ -71,10 +70,9 @@ while True:
                 action.pointer_action.move_to_location(8, 0)
                 action.perform()
                 # driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
-                sleep(0.5)
                 driver.find_element(By.CLASS_NAME, VIDEO_ELEMENTS[index]).click()
                 present = not present
-                sleep(1.25)
+                sleep(1.75)
             # make sure the program doesn't crash if we're not currently watching Netflix
             except exceptions.NoSuchElementException:
                 pass

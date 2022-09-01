@@ -29,13 +29,6 @@ driver.get('http://demo.guru99.com/test/cookie/selenium_cookie.php')
 
 
 # load profile
-
-# chrome
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-
-options = webdriver.ChromeOptions()
-options.add_argument("user-data-dir=C:\\Path") #Path to your chrome profile
 w = webdriver.Chrome(executable_path="C:\\Users\\chromedriver.exe", chrome_options=options)
 
 # log in
