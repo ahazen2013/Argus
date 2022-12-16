@@ -13,12 +13,14 @@
 
 import cv2
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.common import exceptions
 from argparse import ArgumentParser
 import os
+from selenium.webdriver.common.keys import Keys
 
 SERVICES = ['https://www.netflix.com/SwitchProfile?tkn=GOCGTGD3QRF4LJNVYBKFVNOIEA',
             'https://play.hbomax.com/page/urn:hbo:page:home',
@@ -57,7 +59,9 @@ options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
 driver = webdriver.Chrome(options=options)
 driver.get(SERVICES[index])
-driver.fullscreen_window()
+# driver.fullscreen_window()
+ActionChains(driver).send_keys(Keys.F11).perform()
+
 
 while True:
     # Capture frame-by-frame
