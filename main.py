@@ -67,13 +67,14 @@ while True:
     # Capture frame-by-frame
     ret, frame = video_capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    front = frontCascade.detectMultiScale(
-        gray, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
-    left = profileCascade.detectMultiScale(
-        gray, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
-    right = profileCascade.detectMultiScale(
-        cv2.flip(gray, 1), scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
-    f = bool(len(front) or len(left) or len(right))  # looks at front, left profile, and right profile
+    f = len(frontCascade.detectMultiScale(
+        gray, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE))
+    if not f:
+        f = len(profileCascade.detectMultiScale(
+            gray, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE))
+    if not f:
+        f = len(profileCascade.detectMultiScale(
+            cv2.flip(gray, 1), scaleFactor=1.3, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE))
     # if the last person just left the webcam's view, or the first person just entered it
     if (f == past) and (f != present):
         try:
