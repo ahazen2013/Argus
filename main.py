@@ -25,8 +25,10 @@ from selenium.webdriver.common.keys import Keys
 SERVICES = ['https://www.netflix.com/SwitchProfile?tkn=GOCGTGD3QRF4LJNVYBKFVNOIEA',
             'https://play.hbomax.com/page/urn:hbo:page:home',
             'https://www.amazon.com/Amazon-Video/b/?ie=UTF8&node=2858778011&ref_=nav_cs_prime_video',
-            'https://www.disneyplus.com/']
-VIDEO_ELEMENTS = ['watch-video', 'HBO', 'f45h', 'btm-media-clients']
+            'https://www.disneyplus.com/',
+            'https://www.hulu.com/hub/home']
+VIDEO_ELEMENTS = ['watch-video', 'HBO', 'f45h', 'btm-media-clients',
+                  'PlaybackControlsOverPlayer']
 
 parser = ArgumentParser()
 parser.add_argument('command', type=str)
@@ -40,6 +42,8 @@ elif args.command == 'amazon':
     index = 2
 elif args.command == 'disney':
     index = 3
+elif args.command == 'hulu':
+    index = 4
 
 # gives facial recognition a pattern to look for (front-facing face or profile of a face)
 frontCascade = cv2.CascadeClassifier(os.path.abspath(r"C:\Users\Alex\Desktop\GitHub\Argus\haarcascade_frontalface_default.xml"))
